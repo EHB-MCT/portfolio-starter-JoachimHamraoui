@@ -82,7 +82,28 @@ app.post('/student', async (req, res) => {
   }
 });
 
+// Delete a specific student (DELETE)
+app.delete('/student/:id', async (req, res) => {
+  const studentId = req.params.id;
 
+  try {
+      // Assuming 'students' is the name of your MySQL table
+      const deleteCount = await db('students').where('id', studentId).del();
+
+      if (deleteCount === 0) {
+          return res.status(404).send({ error: 'Student not found' });
+      }
+
+      res.status(200).send({ message: 'Student deleted successfully' });
+  } catch (error) {
+      console.error(error);
+
+      res.status(500).send({
+          error: 'Something went wrong',
+          value: error,
+      });
+  }
+});
 
 app.listen(port, () => {
   console.log(`Server is running on port ${port}`);
