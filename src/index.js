@@ -105,6 +105,37 @@ app.delete('/student/:id', async (req, res) => {
   }
 });
 
+// Update a specific student (PUT)
+app.put('/student/:id', async (req, res) => {
+  const studentId = req.params.id;
+  const { first_name, last_name, age, email } = req.body;
+
+  try {
+      // Assuming 'students' is the name of your MySQL table
+      const updateCount = await db('students')
+          .where('id', studentId)
+          .update({
+              first_name,
+              last_name,
+              age,
+              email,
+          });
+
+      if (updateCount === 0) {
+          return res.status(404).send({ error: 'Student not found' });
+      }
+
+      res.status(200).send({ message: 'Student updated successfully' });
+  } catch (error) {
+      console.error(error);
+
+      res.status(500).send({
+          error: 'Something went wrong',
+          value: error,
+      });
+  }
+});
+
 app.listen(port, () => {
   console.log(`Server is running on port ${port}`);
 });
