@@ -54,7 +54,35 @@ app.get('/student/:id', async (req, res) => {
     });
   }
   
-})
+});
+
+// Post a new student (POST)
+app.post('/student', async (req, res) => {
+  const {id, first_name, last_name, age, email, created_at} = req.body;
+
+  try {
+    await db('students').insert({
+      id, 
+      first_name, 
+      last_name, 
+      age, email, 
+      created_at
+    });
+
+    res.status(201).send({
+      message: 'Student created succesfully'
+    });
+  } catch (error) {
+    console.log(error);
+
+    res.status(500).send({
+      error: "Something went wrong",
+      value: error
+    });
+  }
+});
+
+
 
 app.listen(port, () => {
   console.log(`Server is running on port ${port}`);
