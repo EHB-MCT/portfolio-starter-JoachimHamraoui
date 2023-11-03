@@ -1,22 +1,23 @@
-const express = require('express');
-const bodyParser = require('body-parser');
-
-const knex = require('knex');
-const knexConfig = require('./knexfile');
-
-const db = knex(knexConfig.development); // Use the appropriate environment
-
-// You can export 'db' to use it in other parts of your application
-module.exports = db;
+require("dotenv").config();
+const bodyParser = require("body-parser");
+const express = require("express");
+const cors = require("cors");
 
 const app = express();
-const port = 3000;
 
-app.set('db', db);
-
+// Middlewares
+app.use(express.static('public'));
 app.use(bodyParser.json());
+app.use(cors());
 
-// Read all students (GET)
+const db = require("./database/connect_database")
+
+
+app.get("/", (req,res ) =>{
+    res.send("hello world")
+  })
+
+  // Read all students (GET)
 app.get('/students', async (req, res) => {
     try {
       const students = await db('students')
@@ -136,6 +137,4 @@ app.put('/student/:id', async (req, res) => {
   }
 });
 
-app.listen(port, () => {
-  console.log(`Server is running on port ${port}`);
-});
+module.exports = app;
