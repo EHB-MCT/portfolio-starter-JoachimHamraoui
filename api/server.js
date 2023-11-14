@@ -14,7 +14,7 @@ const db = require("./database/connect_database")
 
 
 app.get("/", (req,res ) =>{
-    res.send("hello world")
+    res.send("HEEEEEEY")
   })
 
   // Read all students (GET)
