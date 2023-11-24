@@ -5,7 +5,6 @@
  * @returns: fails if no match, true if right type
  */
 
-
 function checkStudentName(name) {
     if(
         name == null 
@@ -15,8 +14,13 @@ function checkStudentName(name) {
         ) {
         return false
         }
+
         return true
-    }
+}
+
+
+
+
 
 module.exports = {
     checkStudentName
