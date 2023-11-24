@@ -38,6 +38,7 @@ app.get('/students', async (req, res) => {
 //Read a specific student (GET)
 app.get('/student/:id', async (req, res) => {
   const studentId = req.params.id;
+  if (studentId >= 0 && studentId < 9999) {
   try {
     const student = await db('students').where('id', studentId).first();
 
@@ -56,6 +57,12 @@ app.get('/student/:id', async (req, res) => {
       value: error
     });
   }
+} else {
+  res.status(401).json({
+    error: "Negative ID provided",
+
+  });
+}
   
 });
 
