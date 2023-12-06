@@ -6,9 +6,11 @@
 
 exports.seed = function (knex) {
   // Deletes ALL existing entries in the 'students' table
+
   return knex('students')
-    .del()
-    .then(function () {
+    .select("*")
+    .then(function (d) {
+      if(!d[0]) {
       // Inserts seed entries into the 'students' table
       return knex('students').insert([
         {
@@ -34,5 +36,6 @@ exports.seed = function (knex) {
         },
         // Add more student data here
       ]);
+    };
     });
 };

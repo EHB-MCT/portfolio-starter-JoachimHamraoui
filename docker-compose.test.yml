@@ -6,15 +6,13 @@ services:
     restart: unless-stopped
     container_name: portfolio_postgres
     environment:
-      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
-      POSTGRES_USER: ${POSTGRES_USER}
-      POSTGRES_DB: ${POSTGRES_DB}
+      PG_CONNECTION_STRING: "postgres://${POSTGRES_USER}:${POSTGRES_PASSWORD}@store:5432/${POSTGRES_DB}"
     networks:
       - portfolio
     volumes:
-      - ./_volumes/postgres-data:/var/lib/postgresql/data
+      - ./_volumes/test-data:/var/lib/postgresql/data
     ports:
-      - 5432:5432
+      - "5432:5432"
     healthcheck:
       test:
         [
@@ -32,16 +30,20 @@ services:
       - "3000:3000"
     volumes:
       - ./images/api/src:/usr/app/src
+      - ./.git:/usr/app/.git
     networks:
       - portfolio
     environment:
-      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
-      POSTGRES_USER: ${POSTGRES_USER}
-      POSTGRES_DB: ${POSTGRES_DB}
-      POSTGRES_HOST: postgres
+      POSTGRES_USER:
+      POSTGRES_PASSWORD:
+      POSTGRES_DB:
+      POSTGRES_HOST_AUTH_METHOD:
     depends_on:
       postgres:
         condition: service_healthy
+    command: [ "npm", "run", "test" ]
+    stdin_open: false
+    tty: true
 
 networks:
   portfolio:
