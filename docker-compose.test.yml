@@ -41,7 +41,7 @@ services:
     depends_on:
       postgres:
         condition: service_healthy
-    command: [ "npm", "run", "test-watch" ]
+    command: [ "npm", "run", "test" ]
     stdin_open: false
     tty: true
 

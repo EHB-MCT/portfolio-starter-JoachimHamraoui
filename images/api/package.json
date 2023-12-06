@@ -6,7 +6,7 @@
   "scripts": {
     "prep": "npx knex migrate:latest --cwd src/database && npx knex seed:run --cwd src/database",
     "test-watch": "jest --watchAll --detectOpenHandles",
-    "test": "jest --watchAll --detectOpenHandles --forceExit",
+    "test": "npm run prep && jest --detectOpenHandles --forceExit",
     "start": "npm run prep && nodemon src/index.js --legacy-watch"
   },
   "author": "Joachim Hamraoui",
