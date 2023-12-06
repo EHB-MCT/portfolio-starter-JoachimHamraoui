@@ -22,7 +22,7 @@ jobs:
       - name: run docker containers
         run: |
           echo --- Running test cases ---
-          docker-compose up --exit-code-from .
+          docker-compose up --exit-code-from images/api
           echo --- Completed test cases ---
   
   build:
