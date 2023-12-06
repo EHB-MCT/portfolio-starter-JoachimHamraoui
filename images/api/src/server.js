@@ -68,33 +68,33 @@ app.get('/student/:id', async (req, res) => {
 
 // Post a new student (POST)
 app.post('/student', async (req, res) => {
-  const {id, first_name, last_name, age, email, created_at} = req.body;
+  const { id, first_name, last_name, age, email, created_at } = req.body;
 
-  if (checkStudentName(first_name)) {
-    try {
-      await db('students').insert({
-        id, 
-        first_name, 
-        last_name, 
-        age, email, 
+  try {
+    const insertedRecord = await db('students')
+      .insert({
+        id,
+        first_name,
+        last_name,
+        age,
+        email,
         created_at
-      });
-  
-      res.status(201).send({
-        message: 'Student created succesfully'
-      });
-    } catch (error) {
-      console.log(error);
-  
-      res.status(500).send({
-        error: "Something went wrong",
-        value: error
-      });
-    }
-  } else {
-    res.status(401).send({
-      message: "name not formatted correctly"
-    })
+      })
+      .returning('id'); // Explicitly specify the column to return
+
+    const insertedId = insertedRecord[0]; // Assuming returning() returns an array
+
+    res.status(201).send({
+      data: insertedRecord, // Send the inserted ID back in the response
+      message: 'Student created successfully'
+    });
+  } catch (error) {
+    console.log(error);
+
+    res.status(500).send({
+      error: 'Something went wrong',
+      value: error
+    });
   }
 });
 

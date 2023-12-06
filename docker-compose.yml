@@ -14,7 +14,7 @@ services:
     volumes:
       - ./_volumes/postgres-data:/var/lib/postgresql/data
     ports:
-      - "5432:5432"
+      - 5432:5432
     healthcheck:
       test:
         [
@@ -27,11 +27,11 @@ services:
 
   backend:
     container_name: portfolio_backend
-    build: ./api
+    build: ./images/api
     ports:
       - "3000:3000"
     volumes:
-      - ./api/src:/usr/app/src
+      - ./images/api/src:/usr/app/src
     networks:
       - portfolio
     environment:
