@@ -22,5 +22,5 @@ jobs:
       - name: run docker containers
         run: |
           echo --- Running test cases ---
-          docker-compose up --exit-code-from backend
+          docker-compose up --exit-code-from postgres
           echo --- Completed test cases ---
