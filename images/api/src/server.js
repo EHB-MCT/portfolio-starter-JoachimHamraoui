@@ -1,22 +1,25 @@
-const express = require('express');
-const bodyParser = require('body-parser');
+const {checkStudentName } = require('./helpers/endpointHelpers')
 
-const knex = require('knex');
-const knexConfig = require('./knexfile');
-
-const db = knex(knexConfig.development); // Use the appropriate environment
-
-// You can export 'db' to use it in other parts of your application
-module.exports = db;
+require("dotenv").config();
+const bodyParser = require("body-parser");
+const express = require("express");
+const cors = require("cors");
 
 const app = express();
-const port = 3000;
 
-app.set('db', db);
-
+// Middlewares
+app.use(express.static('public'));
 app.use(bodyParser.json());
+app.use(cors());
 
-// Read all students (GET)
+const db = require("./database/connect_database")
+
+
+app.get("/", (req,res ) =>{
+    res.send("taboundimek")
+  })
+
+  // Read all students (GET)
 app.get('/students', async (req, res) => {
     try {
       const students = await db('students')
@@ -35,6 +38,7 @@ app.get('/students', async (req, res) => {
 //Read a specific student (GET)
 app.get('/student/:id', async (req, res) => {
   const studentId = req.params.id;
+  if (studentId >= 0 && studentId < 9999) {
   try {
     const student = await db('students').where('id', studentId).first();
 
@@ -53,30 +57,42 @@ app.get('/student/:id', async (req, res) => {
       value: error
     });
   }
+} else {
+  res.status(401).json({
+    error: "Negative ID provided",
+
+  });
+}
   
 });
 
 // Post a new student (POST)
 app.post('/student', async (req, res) => {
-  const {id, first_name, last_name, age, email, created_at} = req.body;
+  const { id, first_name, last_name, age, email, created_at } = req.body;
 
   try {
-    await db('students').insert({
-      id, 
-      first_name, 
-      last_name, 
-      age, email, 
-      created_at
-    });
+    const insertedRecord = await db('students')
+      .insert({
+        id,
+        first_name,
+        last_name,
+        age,
+        email,
+        created_at
+      })
+      .returning('id'); // Explicitly specify the column to return
+
+    const insertedId = insertedRecord[0]; // Assuming returning() returns an array
 
     res.status(201).send({
-      message: 'Student created succesfully'
+      data: insertedRecord, // Send the inserted ID back in the response
+      message: 'Student created successfully'
     });
   } catch (error) {
     console.log(error);
 
     res.status(500).send({
-      error: "Something went wrong",
+      error: 'Something went wrong',
       value: error
     });
   }
@@ -136,6 +152,4 @@ app.put('/student/:id', async (req, res) => {
   }
 });
 
-app.listen(port, () => {
-  console.log(`Server is running on port ${port}`);
-});
+module.exports = app;
