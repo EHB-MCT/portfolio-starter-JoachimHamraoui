@@ -6,7 +6,7 @@ const db = require("../database/connect_database");
 /**
  * Retrieve all manga.
  *
- * @route GET /api/v1/manga
+ * @route GET /api/mangas
  * @returns {array} - An array of all manga.
  * @throws {object} - Returns a 500 Internal Server Error if the retrieval fails.
  */
@@ -23,6 +23,15 @@ router.get('/', async (req, res) => {
     }
 });
 
+
+/**
+ * Retrieve manga by id.
+ *
+ * @route GET /api/mangas/:id
+ * @param {string} -  req.params.id - The id of the manga to retrieve
+ * @returns {array} - An array of all manga.
+ * @throws {object} - Returns a 500 Internal Server Error if the retrieval fails.
+ */
 router.get('/:id', async (req, res) => {
   const mangaId = req.params.id;
   try {
@@ -46,6 +55,15 @@ router.get('/:id', async (req, res) => {
   
 });
 
+
+/**
+ * Create a new manga.
+ *
+ * @route POST /api//mangas
+ * @param {object} req.body - The manga data to be created.
+ * @returns {object} - The newly created manga.
+ * @throws {object} - Returns a 500 Internal Server Error if the creation fails.
+ */
 router.post('/', async (req, res) => {
   const { id, title, author, cover, nrOfVolumes,read, favorite, created_at, updated_at } = req.body;
 
@@ -77,7 +95,14 @@ router.post('/', async (req, res) => {
   }
 });
 
-
+/**
+ * Delete a manga by ID.
+ *
+ * @route DELETE /api/mangas/:id
+ * @param {string} req.params.id - The ID of the movie to delete.
+ * @returns {string} - A success message.
+ * @throws {object} - Returns a 500 Internal Server Error if the deletion fails.
+ */
 router.delete('/:id', async (req, res) => {
   const mangaId = req.params.id;
 
@@ -90,6 +115,38 @@ router.delete('/:id', async (req, res) => {
       }
 
       res.status(200).send({ message: 'Manga deleted successfully' });
+  } catch (error) {
+      console.error(error);
+
+      res.status(500).send({
+          error: 'Something went wrong',
+          value: error,
+      });
+  }
+});
+
+router.put('/:id', async (req, res) => {
+  const mangaId = req.params.id;
+  const { title, author, cover, nrOfVolumes, read, favorite } = req.body;
+
+  try {
+      // Assuming 'students' is the name of your MySQL table
+      const updateCount = await db('manga')
+          .where('id', mangaId)
+          .update({
+            title,
+            author,
+            cover,
+            nrOfVolumes,
+            read,
+            favorite
+          });
+
+      if (updateCount === 0) {
+          return res.status(404).send({ error: 'Manga not found' });
+      }
+
+      res.status(200).send({ message: 'Manga updated successfully' });
   } catch (error) {
       console.error(error);
 
