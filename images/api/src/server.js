@@ -15,7 +15,7 @@ const db = require("./database/connect_database");
 const manga = require("./routes/manga.route");
 
 // Use defined routes
-app.use("/api/v1/mangas", manga);
+app.use("/api/mangas", manga);
 
 
 app.get("/", (req,res ) =>{
