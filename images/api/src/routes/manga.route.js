@@ -56,6 +56,32 @@ router.get('/:id', async (req, res) => {
 });
 
 
+router.get('/genre/:genreName', async (req, res ) => {
+
+  const genreName = req.params;
+
+  try {
+    // Big help from Rhys Devalckeneer on this bit of code
+    const getMangaByGenre = await db('manga').select(['manga.title', "genres.name AS genreName", "manga.read", "manga.author", "manga.nrOfVolumes", "manga.cover", "manga.favorite", "manga.created_at", "manga.updated_at"])
+    .join('manga_genres', 'manga.id', 'manga_genres.manga_id')
+    .join('genres', 'manga_genres.genre_id', 'genres.id')
+    .where('genres.name', genreName.genreName);
+
+    res.status(200).send(getMangaByGenre);
+    console.log()
+    
+  } catch (error) {
+    console.log(error);
+
+    res.status(500).send({
+      error: "Something went wrong",
+      value: error
+    });
+  }
+
+})
+
+
 /**
  * Create a new manga.
  *
