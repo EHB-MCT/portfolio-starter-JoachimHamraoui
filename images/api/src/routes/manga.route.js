@@ -59,7 +59,7 @@ router.get('/:id', async (req, res) => {
 /**
  * Create a new manga.
  *
- * @route POST /api//mangas
+ * @route POST /api/mangas
  * @param {object} req.body - The manga data to be created.
  * @returns {object} - The newly created manga.
  * @throws {object} - Returns a 500 Internal Server Error if the creation fails.
@@ -107,7 +107,6 @@ router.delete('/:id', async (req, res) => {
   const mangaId = req.params.id;
 
   try {
-      // Assuming 'students' is the name of your MySQL table
       const deleteCount = await db('manga').where('id', mangaId).del();
 
       if (deleteCount === 0) {
@@ -125,12 +124,21 @@ router.delete('/:id', async (req, res) => {
   }
 });
 
+
+/**
+ * Update a manga by ID.
+ *
+ * @route PUT /api/mangas/:id
+ * @param {string} req.params.id - The ID of the manga to update.
+ * @param {object} req.body - The updated movie manga.
+ * @returns {string} - A success message.
+ * @throws {object} - Returns a 500 Internal Server Error if the update fails.
+ */
 router.put('/:id', async (req, res) => {
   const mangaId = req.params.id;
   const { title, author, cover, nrOfVolumes, read, favorite } = req.body;
 
   try {
-      // Assuming 'students' is the name of your MySQL table
       const updateCount = await db('manga')
           .where('id', mangaId)
           .update({
