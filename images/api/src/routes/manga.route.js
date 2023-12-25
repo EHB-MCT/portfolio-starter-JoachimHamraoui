@@ -23,6 +23,26 @@ router.get('/', async (req, res) => {
     }
 });
 
+/**
+ * Retrieve all favorite manga.
+ *
+ * @route GET /api/mangas/favorites
+ * @returns {array} - An array of all favorite manga.
+ * @throws {object} - Returns a 500 Internal Server Error if the retrieval fails.
+ */
+router.get('/favorites', async (req, res) => {
+  try {
+    const mangas = await db('manga').select('*').where('favorite', true)
+    res.status(200).send(mangas)
+  } catch (error) {
+    console.log(error);
+    res.status(500).send({
+      error: "Something went wrong",
+      value: error
+    });
+  }
+});
+
 
 /**
  * Retrieve manga by id.
