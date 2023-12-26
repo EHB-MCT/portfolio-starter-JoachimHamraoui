@@ -231,5 +231,35 @@ router.put('/:id', async (req, res) => {
   }
 });
 
+router.post('/attrGenre', async (req, res) => {
+  const { mangaId, genres } = req.body;
+
+  try {
+    // Check if the manga exists
+    const mangaExists = await db('manga').where('id', mangaId).first();
+    if (!mangaExists) {
+      return res.status(404).send({
+        error: 'Manga not found',
+        message: 'The provided manga ID does not exist'
+      });
+    }
+
+    // Associate genres with the manga in the book_genres table
+    const mangaGenres = genres.map(genreId => ({ manga_id: mangaId, genre_id: genreId }));
+    await db('manga_genres').insert(mangaGenres);
+
+    res.status(201).send({
+      data: { mangaId, genres },
+      message: 'Genres associated with manga successfully'
+    });
+  } catch (error) {
+    console.error(error);
+    res.status(500).send({
+      error: 'Something went wrong',
+      value: error
+    });
+  }
+});
+
 
 module.exports = router;
