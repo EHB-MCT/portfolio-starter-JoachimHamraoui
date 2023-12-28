@@ -200,7 +200,7 @@ router.delete('/:id', async (req, res) => {
  * @returns {string} - A success message.
  * @throws {object} - Returns a 500 Internal Server Error if the update fails.
  */
-router.put('/:id', async (req, res) => {
+router.patch('/:id', async (req, res) => {
   const mangaId = req.params.id;
   const { title, author, cover, nrOfVolumes, read, favorite } = req.body;
 
