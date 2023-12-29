@@ -1,14 +1,15 @@
 import PropTypes from 'prop-types';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 
 export const Card = ({item}) => {
 
     const [isRead, setIsRead] = useState(item.read);
     const [isFavorite, setIsFavorite] = useState(item.favorite);
+    const [genres, setGenres] = useState('');
+    const [isLoading, setIsLoading] = useState(false);
+    const [error, setError] = useState(null);
 
-    // console.log(item.title + isRead)
-
-    const handleUpdateReadStatus = async () => {
+      const handleUpdateReadStatus = async () => {
         try {
           const response = await fetch(`http://localhost:3000/api/mangas/${item.id}`, {
             method: 'PATCH',
@@ -58,15 +59,57 @@ export const Card = ({item}) => {
         }
       };
 
+      useEffect(() => {
+        const fetchData = async () => {
+          setIsLoading(true);
+    
+          try {
+            const response = await fetch(`http://localhost:3000/api/mangas/genres/${item.id}`);
+            
+            if (!response.ok) {
+              throw new Error('Failed to fetch data');
+            }
+    
+            const result = await response.json();
+            setGenres(result);
+          } catch (error) {
+            setError(error.message);
+          } finally {
+            setIsLoading(false);
+          }
+        };
+    
+        fetchData();
+      }, [item.id]);
+
+      if (isLoading) {
+        return <p>Loading...</p>;
+      }
+    
+      if (error) {
+        return <p>Error: {error}</p>;
+      }
+    
+      if (!genres) {
+        return ''; // You might render a placeholder or loading state here
+      }
+
   return (
     
-                <div className='w-2/12 px-2'>
-                    <div className='w-full h-60 truncate mb-2'>
+                <div className='w-1/5 px-2 mb-8'>
+                    <div className='w-full h-72 truncate mb-2'>
                         <img className='w-full' src={item.cover} />
                     </div>
                     <p className='text-md font-display font-semibold text-orange'>{item.title}</p>
                     <p className='text-sm font-mont text-black'>{item.author}</p>
                     <p className='text-xs font-mont text-black'>Volumes - {item.nrOfVolumes}</p>
+                    <div className='w-full flex flex-row mt-2'>
+                      {genres.map((genre, index) => (
+                          <p key={index} className='text-xs'>
+                            {genre.name}, 
+                          </p>
+                      ))}
+                    </div>
                     <div className='w-full flex flex-row mt-2'>
                         {isFavorite ? <button onClick={handleUpdateFavoriteStatus} className='text-sm flex-auto border-2 border-orange rounded-2xl mr-2 bg-orange text-white'>Like</button> : <button onClick={handleUpdateFavoriteStatus}  className='text-sm flex-auto border-2 rounded-2xl mr-2'>Like</button>}
 

@@ -102,7 +102,7 @@ router.get('/genre/:genreName', async (req, res ) => {
 
   try {
     // Big help from Rhys Devalckeneer on this bit of code
-    const getMangaByGenre = await db('manga').select(['manga.title', "genres.name AS genreName", "manga.read", "manga.author", "manga.nrOfVolumes", "manga.cover", "manga.favorite", "manga.created_at", "manga.updated_at"])
+    const getMangaByGenre = await db('manga').select(['manga.id' ,'manga.title', "genres.name AS genreName", "manga.read", "manga.author", "manga.nrOfVolumes", "manga.cover", "manga.favorite", "manga.created_at", "manga.updated_at"])
     .join('manga_genres', 'manga.id', 'manga_genres.manga_id')
     .join('genres', 'manga_genres.genre_id', 'genres.id')
     .where('genres.name', genreName.genreName);
@@ -256,6 +256,30 @@ router.post('/attrGenre', async (req, res) => {
     console.error(error);
     res.status(500).send({
       error: 'Something went wrong',
+      value: error
+    });
+  }
+});
+
+router.get('/genres/:manga_id', async (req, res) => {
+  const mangaId = req.params.manga_id;
+  try {
+    const genres = await db('manga_genres')
+      .where('manga_id', mangaId)
+      .join('genres', 'manga_genres.genre_id', 'genres.id')
+      .select('genres.id', 'genres.name');
+
+    if (genres.length === 0) {
+      return res.status(404).send({
+        error: "Genres not found for this manga",
+      });
+    }
+
+    res.status(200).send(genres);
+  } catch (error) {
+    console.log(error);
+    res.status(500).send({
+      error: "Something went wrong",
       value: error
     });
   }

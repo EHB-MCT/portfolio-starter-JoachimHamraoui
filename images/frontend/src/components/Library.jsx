@@ -8,6 +8,7 @@ export const Library = () => {
     const [isLoading, setIsLoading] = useState(false);
     const [error, setError] = useState(null);
     const [filter, setFilter] = useState('');
+    const [genreList, setGenreList] = useState([]);
 
     useEffect(() => {
         const fetchData = async () => {
@@ -28,8 +29,26 @@ export const Library = () => {
             setIsLoading(false);
           }
         };
+
+        const fetchGenres = async () => {
+
+    
+          try {
+            const response = await fetch(`http://localhost:3000/api/genres`);
+            
+            if (!response.ok) {
+              throw new Error('Failed to fetch data');
+            }
+    
+            const result = await response.json();
+            setGenreList(result);
+          } catch (error) {
+            console.log(error.message);
+          }
+        };
     
         fetchData();
+        fetchGenres();
       }, [filter]);
 
       const allMangas = () => {
@@ -44,6 +63,12 @@ export const Library = () => {
         setFilter('favorites')
       }
 
+      const genreFilter = (event) => {
+        setFilter(event.target.value);
+        console.log('Selected genre:', event.target.value);
+        console.log(filter)
+      }
+ 
       console.log(filter)
 
       if (isLoading) {
@@ -66,6 +91,12 @@ export const Library = () => {
                 <button className='flex-auto border-2 rounded-2xl mr-4 duration-300 transition-bg transition-text hover:text-white hover:bg-black border-black' onClick={allMangas}>All</button>
                 <button className='flex-auto border-2 rounded-2xl mr-4 duration-300 transition-bg transition-text hover:text-white hover:bg-black border-black' onClick={readMangas}>Read</button>
                 <button className='flex-auto border-2 rounded-2xl mr-4 duration-300 transition-bg transition-text hover:text-white hover:bg-black border-black' onClick={favoriteMangas}>Favorites</button>
+                  <select value={filter} onChange={genreFilter}>
+                    <option value=" ">All</option>
+                    {genreList.map((genre, index) => (
+                      <option key={index} value={`genre/${genre.name}`}>{genre.name}</option>
+                    ))}
+                  </select>
             </div>
         </div>
         <div className='w-full flex flex-wrap flex-row'>
