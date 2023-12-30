@@ -106,7 +106,7 @@ export const Card = ({item}) => {
                     <div className='w-full flex flex-row mt-2'>
                       {genres.map((genre, index) => (
                           <p key={index} className='text-xs'>
-                            {genre.name}, 
+                            {genre.name}&nbsp;&nbsp;&nbsp; 
                           </p>
                       ))}
                     </div>

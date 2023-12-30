@@ -23,6 +23,20 @@ router.get('/', async (req, res) => {
     }
 });
 
+router.get('/createdAt', async (req, res) => {
+  try {
+    const mangas = await db('manga').orderBy('manga.created_at', 'desc'); 
+
+    res.status(200).send(mangas);
+  } catch (error) {
+    console.error(error);
+    res.status(500).send({
+      error: 'Something went wrong',
+      value: error
+    });
+  }
+});
+
 /**
  * Retrieve all favorite manga.
  *
@@ -131,32 +145,38 @@ router.get('/genre/:genreName', async (req, res ) => {
  * @throws {object} - Returns a 500 Internal Server Error if the creation fails.
  */
 router.post('/', async (req, res) => {
-  const { id, title, author, cover, nrOfVolumes,read, favorite, created_at, updated_at } = req.body;
+  const { id, title, author, cover, nrOfVolumes, read, favorite, created_at, updated_at } = req.body;
 
   try {
+    await db('manga').insert({
+      id,
+      title,
+      author,
+      cover,
+      nrOfVolumes,
+      read,
+      favorite,
+      created_at,
+      updated_at
+    });
+
+    // Fetch the last inserted record from the database based on insertion time
     const insertedRecord = await db('manga')
-      .insert({
-        id,
-        title,
-        author,
-        cover,
-        nrOfVolumes,
-        read,
-        favorite,
-        created_at,
-        updated_at
-      })
+      .orderBy('manga.created_at', 'desc') // Assuming created_at represents insertion time
+      .first();
+
+    if (!insertedRecord) {
+      throw new Error('Failed to retrieve last inserted record');
+    }
 
     res.status(201).send({
-      data: insertedRecord, // Send the inserted ID back in the response
+      data: insertedRecord,
       message: 'Manga created successfully'
     });
   } catch (error) {
-    console.log(error);
-
+    console.error(error);
     res.status(500).send({
-      error: 'Something went wrong',
-      value: error
+      error: 'Something went wrong'
     });
   }
 });

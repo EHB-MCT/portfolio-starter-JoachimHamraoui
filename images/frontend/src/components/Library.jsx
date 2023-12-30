@@ -87,11 +87,11 @@ export const Library = () => {
     <div>
         <div className='w-full flex flex-row mb-5'>
             {/* <h2 className="text-black text-2xl font-mont">Library</h2> */}
-            <div className='w-1/3 flex flex-row ml-2'>
-                <button className='flex-auto border-2 rounded-2xl mr-4 duration-300 transition-bg transition-text hover:text-white hover:bg-black border-black' onClick={allMangas}>All</button>
-                <button className='flex-auto border-2 rounded-2xl mr-4 duration-300 transition-bg transition-text hover:text-white hover:bg-black border-black' onClick={readMangas}>Read</button>
-                <button className='flex-auto border-2 rounded-2xl mr-4 duration-300 transition-bg transition-text hover:text-white hover:bg-black border-black' onClick={favoriteMangas}>Favorites</button>
-                  <select value={filter} onChange={genreFilter}>
+            <div className='w- flex flex-row ml-2'>
+                <button className='flex-auto flex border-2 rounded-2xl mr-4 duration-300 transition-bg transition-text hover:text-white hover:bg-black border-black px-5 py-0.5' onClick={allMangas}>All</button>
+                <button className='flex-auto flex border-2 rounded-2xl mr-4 duration-300 transition-bg transition-text hover:text-white hover:bg-black border-black px-5 py-0.5' onClick={readMangas}>Read</button>
+                <button className='flex-auto flex border-2 rounded-2xl mr-4 duration-300 transition-bg transition-text hover:text-white hover:bg-black border-black px-5 py-0.5' onClick={favoriteMangas}>Favorites</button>
+                  <select value={filter} onChange={genreFilter} className='flex-auto flex border-2 rounded-2xl mr-4 border-black px-3 py-0.5'>
                     <option value=" ">All</option>
                     {genreList.map((genre, index) => (
                       <option key={index} value={`genre/${genre.name}`}>{genre.name}</option>
