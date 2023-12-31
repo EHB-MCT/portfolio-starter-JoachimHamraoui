@@ -1,5 +1,7 @@
 import PropTypes from 'prop-types';
 import { useState, useEffect } from 'react';
+import { FaHeart, FaRegHeart  } from "react-icons/fa6";
+import { FaRegBookmark, FaBookmark } from "react-icons/fa";
 
 export const Card = ({item}) => {
 
@@ -97,7 +99,12 @@ export const Card = ({item}) => {
   return (
     
                 <div className='w-1/5 px-2 mb-8'>
-                    <div className='w-full h-72 truncate mb-2'>
+                    <div className='h-72 truncate mb-2 btn-hover'>
+                        <div className='flex flex-col absolute mt-2 ml-2'>
+                          {isFavorite ? <button onClick={handleUpdateFavoriteStatus} className='text-lg rounded-2xl mr-2 p-1 bg-white text-orange mb-2'><FaHeart /></button> : <button onClick={handleUpdateFavoriteStatus}  className='text-lg  rounded-2xl mr-2 p-1 bg-white text-orange mb-2'><FaRegHeart /></button>}
+
+                          {isRead ? <button onClick={handleUpdateReadStatus} className='text-lg rounded-2xl mr-2 p-1 bg-white text-orange'><FaBookmark /></button> : <button onClick={handleUpdateReadStatus}  className='text-lg  rounded-2xl mr-2 p-1 bg-white text-orange'><FaRegBookmark /></button>}
+                          </div>
                         <img className='w-full' src={item.cover} />
                     </div>
                     <p className='text-md font-display font-semibold text-orange'>{item.title}</p>
@@ -110,10 +117,10 @@ export const Card = ({item}) => {
                           </p>
                       ))}
                     </div>
-                    <div className='w-full flex flex-row mt-2'>
-                        {isFavorite ? <button onClick={handleUpdateFavoriteStatus} className='text-sm flex-auto border-2 border-orange rounded-2xl mr-2 bg-orange text-white'>Like</button> : <button onClick={handleUpdateFavoriteStatus}  className='text-sm flex-auto border-2 rounded-2xl mr-2'>Like</button>}
+                    <div className='w-full flex flex-col mt-2'>
+                        {/* {isFavorite ? <button onClick={handleUpdateFavoriteStatus} className='text-sm border-2 border-orange rounded-2xl mr-2 text-orange'><FaHeart /></button> : <button onClick={handleUpdateFavoriteStatus}  className='text-sm border-2 rounded-2xl mr-2'><FaRegHeart /></button>}
 
-                        {isRead ? <button onClick={handleUpdateReadStatus} className='text-sm flex-auto border-2 border-orange rounded-2xl ml-2 bg-orange text-white'>Read</button> : <button onClick={handleUpdateReadStatus}  className='text-sm flex-auto border-2 rounded-2xl ml-2'>Read</button>}
+                        {isRead ? <button onClick={handleUpdateReadStatus} className='text-sm flex-auto border-2 border-orange rounded-2xl ml-2 bg-orange text-white'>Read</button> : <button onClick={handleUpdateReadStatus}  className='text-sm flex-auto border-2 rounded-2xl ml-2'>Read</button>} */}
                     </div>
                 </div>
 

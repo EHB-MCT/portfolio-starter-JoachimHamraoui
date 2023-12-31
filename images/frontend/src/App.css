@@ -6,3 +6,24 @@ body {
     background-color: #579434;
    color: #ebebeb;
 }
+
+.btn-hover div button {
+    opacity: 0;
+    display: hidden;
+    transition: opacity .2 ease-in-out;
+    -webkit-transition: opacity .2 ease-in-out;
+    -moz-transition: opacity .2 ease-in-out;
+    -ms-transition: opacity .2 ease-in-out;
+    -o-transition: opacity .2 ease-in-out;
+}
+
+.btn-hover:hover div button {
+    opacity: 1;
+    display: flex;
+    transition: opacity .2s ease-in-out;
+    -webkit-transition: opacity .2s ease-in-out;
+    -moz-transition: opacity .2s ease-in-out;
+    -ms-transition: opacity .2s ease-in-out;
+    -o-transition: opacity .2s ease-in-out;
+}
+
