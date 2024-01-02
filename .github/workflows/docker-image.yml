@@ -11,38 +11,32 @@ env:
   NODE_ENV: development
   
 jobs:
-
   test:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v3
-
-      - name: build docker containers
-        run: docker-compose build 
-
-      steps:
       - uses: actions/checkout@v2
 
       - name: build docker containers
         run: docker-compose build
 
       - name: run docker containers
-        run: docker-compose -f ./docker-compose.ci.yml up --build --exit-code-from backend
+        run: docker-compose -f ./docker-compose.test.yml up --build --exit-code-from backend
+
   build:
     needs: test
     runs-on: ubuntu-latest
 
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v2
 
       - name: build
         run: docker-compose build
-      
+
       - name: Login to Docker Hub
-        uses: docker/login-action@v3
+        uses: docker/login-action@v1
         with:
           username: ${{ secrets.DOCKERHUB_USERNAME }}
           password: ${{ secrets.DOCKERHUB_TOKEN }}
-      
+
       - name: publish
         run: docker-compose push
