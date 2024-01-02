@@ -6,7 +6,7 @@ const db = require("knex")(knexfile.development);
 //docker compose -f ./docker-compose-test.yml up --build
 
 // Assuming your endpoint is '/student/:id'
-describe('GET /student/:id', () => {
+describe('GET /api/mangas/:id', () => {
   beforeAll(async () => {
     // Set up your database connection and seed test data
     await db.raw('BEGIN');
@@ -17,51 +17,51 @@ describe('GET /student/:id', () => {
     await db.destroy();
   });
 
-  test('should return the correct student record for a valid ID', async () => {
+  test('should return the correct manga for a valid ID', async () => {
     
-    const studentId = 56; // Replace with the ID of the student you want to test
-    const response = await request(app).get(`/student/${studentId}`);
+    const mangaId = 45; // Replace with the ID of the student you want to test
+    const response = await request(app).get(`/api/mangas/${mangaId}`);
     expect(response.status).toBe(200); // Check if the response status is OK
     // Assuming the response contains student data in JSON format
-    expect(response.body.id).toBe(studentId); // Check if the returned ID matches the requested ID
+    expect(response.body.id).toBe(mangaId); // Check if the returned ID matches the requested ID
     // Add more expectations to check other fields if needed
 
-    const dbRecord = await db('students').select("*").where("id", studentId)
+    const dbRecord = await db('manga').select("*").where("id", mangaId)
     expect(dbRecord.length).toBeGreaterThan(0);
-    expect(dbRecord[0]).toHaveProperty('id', studentId);
+    expect(dbRecord[0]).toHaveProperty('id', mangaId);
 
 
   });
 
   test('should return 404 for an invalid ID', async () => {
-    const invalidStudentId = 999; // An ID that does not exist in the test data
+    const invalidMangaId = 999; // An ID that does not exist in the test data
 
-    const response = await request(app).get(`/student/${invalidStudentId}`);
+    const response = await request(app).get(`/api/mangas/${invalidMangaId}`);
     expect(response.status).toBe(404); // Check if the response status is 404 for an invalid ID
 
-    const dbRecord = await db('students').select("*").where("id", invalidStudentId)
+    const dbRecord = await db('manga').select("*").where("id", invalidMangaId)
     expect(dbRecord.length).toBe(0);
 
   });
 
-  test('should return 401 for negative ID', async () => {
-    const negativeStudentId = -12; // An ID that does not exist in the test data
+  test('should return 404 for negative ID', async () => {
+    const negativeMangaId = -12; // An ID that does not exist in the test data
 
-    const response = await request(app).get(`/student/${negativeStudentId}`);
-    expect(response.status).toBe(401); // Check if the response status is 404 for an invalid ID
+    const response = await request(app).get(`/api/mangas/${negativeMangaId}`);
+    expect(response.status).toBe(404); // Check if the response status is 404 for an invalid ID
   });
 
-  test('should return 401 for negative ID', async () => {
-    const negativeStudentId = "test"; // An ID that does not exist in the test data
+  test('should return 500 for non-integer ID', async () => {
+    const nonIntegerMangaId = "test"; // An ID that does not exist in the test data
 
-    const response = await request(app).get(`/student/${negativeStudentId}`);
-    expect(response.status).toBe(401); // Check if the response status is 404 for an invalid ID
+    const response = await request(app).get(`/api/mangas/${nonIntegerMangaId}`);
+    expect(response.status).toBe(500); // Check if the response status is 404 for an invalid ID
   });
 
-  test('should return 401 for too large ID', async () => {
-    const tooLargeStudentId = 9999; // An ID that does not exist in the test data
+  test('should return 404 for too large ID', async () => {
+    const tooLargeMangaId = 9999; // An ID that does not exist in the test data
 
-    const response = await request(app).get(`/student/${tooLargeStudentId}`);
-    expect(response.status).toBe(401); // Check if the response status is 404 for an invalid ID
+    const response = await request(app).get(`/student/${tooLargeMangaId}`);
+    expect(response.status).toBe(404); // Check if the response status is 404 for an invalid ID
   });
 });

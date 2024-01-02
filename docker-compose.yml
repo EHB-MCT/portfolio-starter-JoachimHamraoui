@@ -29,7 +29,7 @@ services:
     container_name: portfolio_backend
     build: ./images/api
     ports:
-      - "3000:3000"
+      - 3000:3000
     volumes:
       - ./images/api/src:/usr/app/src
     networks:
@@ -43,6 +43,23 @@ services:
       postgres:
         condition: service_healthy
 
+  # frontend:
+  #   container_name: portfolio_frontend
+  #   build: ./images/frontend
+  #   ports: 
+  #     - 5173:5173
+  #   depends_on:
+  #     - backend
+  #   networks:
+  #     - portfolio  
+  #   # https://www.youtube.com/watch?v=QePBbG5MoKk&ab_channel=NetNinja
+  #   # This video helped to make sure my React project would run correctly
+  #   # stdin_open: true  
+  #   tty: true 
+  #   volumes:
+  #     - ./images/frontend:/app
+  #     - /app/node_modules
+      
 networks:
   portfolio:
     driver: bridge
