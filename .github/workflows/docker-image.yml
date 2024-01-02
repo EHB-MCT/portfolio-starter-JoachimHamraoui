@@ -8,6 +8,7 @@ env:
   POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
   POSTGRES_USER: ${POSTGRES_USER}
   POSTGRES_DB: ${POSTGRES_DB}
+  NODE_ENV: development
   
 jobs:
 
@@ -19,11 +20,14 @@ jobs:
       - name: build docker containers
         run: docker-compose build 
 
+      steps:
+      - uses: actions/checkout@v2
+
+      - name: build docker containers
+        run: docker-compose build
+
       - name: run docker containers
-        run: |
-          echo --- Running test cases ---
-          docker-compose -f docker-compose.ci.yml up --exit-code-from backend
-          echo --- Completed test cases ---
+        run: docker-compose -f ./docker-compose.test.yml up --build --exit-code-from backend
   build:
     needs: test
     runs-on: ubuntu-latest
