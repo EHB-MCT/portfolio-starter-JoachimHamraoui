@@ -1,16 +1,29 @@
 /**
- * check name of new student on post
+ * check title of new manga on post
  * 
- * @param: student name
+ * @param: manga title
  * @returns: fails if no match, true if right type
  */
 
-function checkStudentName(name) {
+function checkMangaTitle(title) {
+    if(
+        title == null 
+        || title.length <= 1 
+        || typeof(title) != "string" 
+        || title.length > 50
+        ) {
+        return false
+        }
+
+        return true
+}
+
+function checkMangaAuthor(name) {
     if(
         name == null 
         || name.length <= 1 
         || typeof(name) != "string" 
-        || name.length > 20
+        || name.length > 30
         ) {
         return false
         }
@@ -19,9 +32,31 @@ function checkStudentName(name) {
 }
 
 
+function checkMangaCoverUrl(url) {
+    if (typeof url !== 'string' 
+    || !url.endsWith('.jpg') 
+    || !isNaN(url.split('/').pop().split('.')[0]) // 
+    ) {
+        return false;
+    }
+    return true;
+}
 
+function checkMangaVolumes(volumes) {
+    if (typeof volumes !== 'number' //checks for numerical value but with decimals
+    || !Number.isInteger(volumes) // checks if number is in fact an integer, blocking any kind of decimals
+    || volumes < 0) {
+        return false;
+    }
+    return true;
+}
+
+module.exports = { checkMangaVolumes };
 
 
 module.exports = {
-    checkStudentName
+    checkMangaTitle,
+    checkMangaAuthor,
+    checkMangaCoverUrl,
+    checkMangaVolumes
 }

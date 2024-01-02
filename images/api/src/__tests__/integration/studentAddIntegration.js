@@ -5,32 +5,17 @@ const db = require("knex")(knexfile.development);
 
 //docker compose -f ./docker-compose-test.yml up --build
 
-function generateRandomEmail() {
-  const usernameLength = 8;
-  const domain = 'example.com'; // You can replace this with any domain
-
-  const characters = 'abcdefghijklmnopqrstuvwxyz0123456789';
-  let username = '';
-  for (let i = 0; i < usernameLength; i++) {
-    const randomIndex = Math.floor(Math.random() * characters.length);
-    username += characters.charAt(randomIndex);
-  }
-
-  return `${username}@${domain}`;
-}
-
-const randomEmail = generateRandomEmail();  
-
-const exampleStudent = {
-
-  first_name: 'test',
-  last_name: 'integration',
-  age: Math.floor(Math.random() * 99),
-  email: randomEmail,
+const exampleManga = {
+  title: 'Test Manga',
+  author: 'Kobe lol',
+  cover: 'https://m.media-amazon.com/images/I/91rUWaFxAYL._SL1500_.jpg',
+  nrOfVolumes: 48,
+  read: false,
+  favorite: false
 }
 
 // Assuming your endpoint is '/student/:id'
-describe('POST /student', () => {
+describe('POST /manga', () => {
   beforeAll(async () => {
     // Set up your database connection and seed test data
     await db.raw('BEGIN');
@@ -43,20 +28,23 @@ describe('POST /student', () => {
 
   test('should return the correct student record', async () => {
 
-    const response = await request(app).post('/student').send(exampleStudent);
+    const response = await request(app).post('/api/mangas').send(exampleManga);
     
-    const studentResponse = response.body;
+    const mangaResponse = response.body;
     console.log(response.body)
 
     expect(response.status).toBe(201);
 
-    const dbRecord = await db('students').select("*").first().where("id", 58);
+    const dbRecord = await db('manga').select("*").first().where("id", mangaResponse.data.id);
     expect(dbRecord).toHaveProperty('id');
-    expect(dbRecord).toHaveProperty('first_name');
-    expect(dbRecord).toHaveProperty('last_name');
-    expect(dbRecord).toHaveProperty('age');
-    expect(dbRecord).toHaveProperty('email');
+    expect(dbRecord).toHaveProperty('title');
+    expect(dbRecord).toHaveProperty('author');
+    expect(dbRecord).toHaveProperty('cover');
+    expect(dbRecord).toHaveProperty('nrOfVolumes');
+    expect(dbRecord).toHaveProperty('read');
+    expect(dbRecord).toHaveProperty('favorite');
     expect(dbRecord).toHaveProperty('created_at');
+    expect(dbRecord).toHaveProperty('updated_at');
     
     
     // const studentId = 56;
