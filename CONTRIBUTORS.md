@@ -1,4 +1,4 @@
-# Contributors to [Your Project Name]
+# Contributors to Manga App Le Collectif
 
 A big thank you to all the contributors who have helped improve [Your Project Name].
 
