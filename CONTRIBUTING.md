@@ -1,6 +1,6 @@
-# Contributing to [Portfolio]
+# Contributing to [Manga App]
 
-Welcome! We're excited that you're interested in contributing to [Your Project Name]. Before you get started, please take a moment to read through the following guidelines.
+Welcome! We're excited that you're interested in contributing to [Manga App]. Before you get started, please take a moment to read through the following guidelines.
 
 ## Code of Conduct
 
