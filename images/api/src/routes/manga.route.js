@@ -23,6 +23,15 @@ router.get('/', async (req, res) => {
     }
 });
 
+/**
+ * Retrieve manga sorted by created date and time.
+ *
+ * @route GET /api/mangas/createdAt
+ * @param {string} -  manga database get orderBy creation time
+ * @returns {array} - An array of all manga.
+ * @throws {object} - Returns a 500 Internal Server Error if the retrieval fails.
+ */
+
 router.get('/createdAt', async (req, res) => {
   try {
     const mangas = await db('manga').orderBy('manga.created_at', 'desc'); 
@@ -109,7 +118,14 @@ router.get('/:id', async (req, res) => {
   
 });
 
-
+/**
+ * Retrieve manga by id.
+ *
+ * @route GET /api/mangas/genre/:genreName
+ * @param {string} -  req.params - The name of the manga genre to retrieve
+ * @returns {array} - An array of all manga.
+ * @throws {object} - Returns a 500 Internal Server Error if the retrieval fails.
+ */
 router.get('/genre/:genreName', async (req, res ) => {
 
   const genreName = req.params;
@@ -251,6 +267,15 @@ router.patch('/:id', async (req, res) => {
   }
 });
 
+
+/**
+ * Create a new manga.
+ *
+ * @route POST /api/mangas/attrGenre
+ * @param {object} req.body - The manga id and an array of all genres id.
+ * @returns {object} - Attribute each genre to said manga.
+ * @throws {object} - Returns a 500 Internal Server Error if the creation fails.
+ */
 router.post('/attrGenre', async (req, res) => {
   const { mangaId, genres } = req.body;
 
@@ -281,6 +306,15 @@ router.post('/attrGenre', async (req, res) => {
   }
 });
 
+
+/**
+ * Retrieve manga by genre.
+ *
+ * @route GET /api/mangas/genres/:id
+ * @param {string} -  req.params.manga_id - The id in manga_id
+ * @returns {array} - An array of all manga with said genre attributed to manga_id.
+ * @throws {object} - Returns a 500 Internal Server Error if the retrieval fails.
+ */
 router.get('/genres/:manga_id', async (req, res) => {
   const mangaId = req.params.manga_id;
   try {
